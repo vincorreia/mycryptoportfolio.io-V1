@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Your Portfolio</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@500&family=Ubuntu&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg bg-custom navPad">
+            <a class="navbar-brand ubuntu bold white" href="#">MyCryptoPortfolio.io</a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link white" href="/portfolio">Portfolio</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link white" href="/p2e">P2E Calculator</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <form action="/portfolio" method="post">
+            <label for="contractInput">Crypto Contract: </label>
+            <input id="contractInput" type="text" name="cryptoContract">
+            <button type="submit" name="submit">Submit</button>
+        </form>
+    </body>
+</html>

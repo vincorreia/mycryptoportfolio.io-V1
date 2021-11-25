@@ -1,0 +1,77 @@
+/* General Tags */
+body{
+    background-color: #A6B1E1;
+}
+
+p{
+    font-size: 1.5rem;
+}
+
+/* Font Selectors */
+.ubuntu{
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.sans {
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+.bold{
+    font-weight: bold;
+}
+
+/* Positioning Selectors */
+.navPad{
+    padding-left: 15%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+}
+
+.regularDiv{
+    padding-bottom: 200px;
+    padding-top: 100px;
+    margin-left: 15%;
+}
+
+.removePad{
+    padding: 0;
+}
+
+
+/* Color Selectors */
+.white{
+    color: #F4EEFF;
+}
+.darkBlue{
+    color: #424874;
+}
+.lightBlue{
+    color: #DCD6F7;
+}
+
+
+.navbar-brand:hover{
+    color: #A6B1E1;
+}
+.nav-link:hover{
+    color: #A6B1E1;
+}
+.bg-custom{
+    background-color: #424874;
+}
+.big{
+    font-size: 3.50rem;
+}
+.eth{
+    width: 400px;
+    height: 400px;
+}
+
+
+.coloredDiv{
+    background-color: #424874;
+}
+
+.mtop10{
+    margin-top: 10%;
+}
