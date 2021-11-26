@@ -1,20 +1,25 @@
 const express = require('express');
 const https = require('https');
 const bp = require('body-parser');
+
 const app = express();
 
+var cryptoNames = [];
+var cryptoPrices = [];
+
+app.set('view engine', 'ejs');
 app.use(bp.urlencoded({extended: true}));
 
 app.use(express.static("public"));
 
 
 app.get("/", function(req, res){
-    res.sendFile(__dirname + "/index.html");
+    res.render("index");
 });
 
 
 app.get("/portfolio", function(req, res){
-    res.sendFile(__dirname + "/portfolio.html");
+    res.render("portfolio", {cryptoNames: cryptoNames, cryptoPrices: cryptoPrices});
 });
 
 
@@ -26,20 +31,23 @@ app.listen(4002, function(){
 // Post on Portfolio //
 
 app.post("/portfolio", function(req, res){
-    getCurrencyPrice(res, req.body.cryptoContract);
+    getCurrencyPrice(req.body.cryptoContract);
+
+    res.redirect("/portfolio")
 })
 
 // Pancake Swap API //
-function getCurrencyPrice(res, contract){
+function getCurrencyPrice(contract){
     var url = "https://api.pancakeswap.info/api/v2/tokens/" + contract;
     https.get(url, function(response){
 
             response.on("data", function(data){
-                const crypto = JSON.parse(data);
-                const cryptoPrice = crypto.data.price;
-                const cryptoSymbol = crypto.data.symbol;
-                const price = Math.floor(Number(cryptoPrice)* 100)/100
-                res.send(cryptoSymbol + " price: $" + price);
+                var crypto = JSON.parse(data);
+                var cryptoPrice = crypto.data.price;
+                var cryptoSymbol = crypto.data.symbol;
+                var price = Math.floor(Number(cryptoPrice)* 100)/100
+                cryptoNames.push(cryptoSymbol);
+                cryptoPrices.push(price);
         });
     });
 }
