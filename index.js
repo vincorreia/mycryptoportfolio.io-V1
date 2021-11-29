@@ -1,6 +1,7 @@
 const express = require('express');
 const https = require('https');
 const bp = require('body-parser');
+const mongoose = require('mongoose');
 
 const app = express();
 
@@ -50,6 +51,29 @@ function getCurrencyPrice(res, contract, redirection){
         });
     });
 }
+// DB //
+
+mongoose.connect("mongodb://localhost:27017/MyCryptoPortfolio")
+
+const userSchema = new mongoose.Schema({
+    _id: Number,
+    name: String,
+    user_name: String,
+    password: Number,
+    contracts: [],
+});
+
+const User = mongoose.model("User", userSchema);
+
+const new_user = new User({
+    _id: 01,
+    name: "Vinnicius",
+    user_name: "housevinni",
+    password: "1234",
+    contracts: ["0x00e1656e45f18ec6747f5a8496fd39b50b38396d", "0x50332bdca94673f33401776365b66cc4e81ac81d"]
+});
+
+
 
 // Start Server //
 

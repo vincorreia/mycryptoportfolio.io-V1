@@ -1,15 +1,37 @@
 <%- include ("header") -%>
-
-        <form action="/portfolio" method="post">
-            <label for="contractInput">Crypto Contract: </label>
-            <input id="contractInput" type="text" name="cryptoContract">
-            <button type="submit" name="submit">Submit</button>
-        </form>
-        <ul>
-            <% for(var i = 0; i < cryptoNames.length; i++){ %>
-                <li> <%= cryptoNames[i] %> current price is: <%= cryptoPrices[i] %> </li>
-            <%}%>
-        </ul>
+<form action="/portfolio" method="post">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="form-group regularDiv col-lg-5">
+                        <label for="contractInput" class="darkBlue bold ubuntu medium">Crypto Contract: </label><br>
+                        <input id="contractInput" type="text" name="cryptoContract" class="form-control-lg w-50" placeholder="Enter the crypto currency contract"><br><br>
+                        <button type="submit" name="submit" class="btn btn-success btn-large">Submit</button>
+            </div>
+            <div class="col-lg-3 regularPad">
+                <table class="table">
+                    <thead>
+                        <th scope="col">Coin</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Price Bought</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Current Profit</th>
+                    </thead>
+                    <tbody>
+                        <% for(var i = 0; i < cryptoNames.length; i++){ %>
+                            <tr>
+                             <td><%= cryptoNames[i] %> </td>
+                             <td><%= cryptoPrices[i] %></td>
+                             <td>2.20</td>
+                             <td>29.634</td>
+                             <td><%= (cryptoPrices[i] * 29.634) - (2.20 * 29.634) %></td>
+                            </tr>
+                        <%}%>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+     </form>
     </body>
 <%- include("footer") -%>
 </html>

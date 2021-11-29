@@ -33,6 +33,10 @@ p{
     margin-left: 15%;
 }
 
+.regularPad{
+    padding-bottom: 200px;
+    padding-top: 100px;
+}
 .removePad{
     padding: 0;
 }
@@ -62,6 +66,9 @@ p{
 .big{
     font-size: 3.50rem;
 }
+.medium{
+    font-size: 1.5rem;
+}
 .eth{
     width: 400px;
     height: 400px;
@@ -74,4 +81,8 @@ p{
 
 .mtop10{
     margin-top: 10%;
+}
+
+.width50{
+    width: 40%
 }
