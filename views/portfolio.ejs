@@ -3,8 +3,9 @@
     <div class="container-fluid">
         <div class="row">
             <div class="form-group regularDiv col-lg-5">
-                        <label for="contractInput" class="darkBlue bold ubuntu medium">Crypto Contract: </label><br>
+                        <label for="contractInput" class="darkBlue bold ubuntu medium">New Purchase Details: </label><br>
                         <input id="contractInput" type="text" name="cryptoContract" class="form-control-lg w-50" placeholder="Enter the crypto currency contract"><br><br>
+                        <input type="number" name="cryptoAmount" placeholder="Amount" class="form-control-lg w-25" step="0.0000000000001"><input type="number" name="cryptoPurchase" placeholder="Purchase Price" class="form-control-lg w-25" step="0.0000000000001"><br><br>
                         <button type="submit" name="submit" class="btn btn-success btn-large">Submit</button>
             </div>
             <div class="col-lg-3 regularPad">
@@ -17,13 +18,13 @@
                         <th scope="col">Current Profit</th>
                     </thead>
                     <tbody>
-                        <% for(var i = 0; i < cryptoNames.length; i++){ %>
+                        <% for(i=0; i < userInfo.contracts.length; i++){ %>
                             <tr>
-                             <td><%= cryptoNames[i] %> </td>
-                             <td><%= cryptoPrices[i] %></td>
-                             <td>2.20</td>
-                             <td>29.634</td>
-                             <td><%= (cryptoPrices[i] * 29.634) - (2.20 * 29.634) %></td>
+                             <td><%= cryptos[i].coinFigure %></td>
+                             <td><%= cryptos[i].coinPrice %></td>
+                             <td><%= userInfo.contracts[i].medium_price %></td>
+                             <td><%= userInfo.contracts[i].amount %></td>
+                             <td><%= (1 * userInfo.contracts[i].amount) - (userInfo.contracts[i].medium_price * userInfo.contracts[i].amount) %></td>
                             </tr>
                         <%}%>
                     </tbody>

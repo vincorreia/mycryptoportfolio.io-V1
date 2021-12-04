@@ -5,9 +5,6 @@ const mongoose = require('mongoose');
 
 const app = express();
 
-var cryptoNames = [];
-var cryptoPrices = [];
-
 app.set('view engine', 'ejs');
 app.use(bp.urlencoded({extended: true}));
 
@@ -22,59 +19,129 @@ app.get("/", function(req, res){
 // Portfolio //
 
 app.get("/portfolio", function(req, res){
-    res.render("portfolio", {cryptoNames: cryptoNames, cryptoPrices: cryptoPrices});
-});
-
+    User.findOne({_id: 1}, function(err, userOnDB){
+        if(userOnDB.contracts.length > 0){
+            getCurrencyPrice();
+        }
+        setTimeout(function(){
+            Crypto.find({}, function(err, cryptos){
+        setTimeout(function(){
+            res.render("portfolio", {userInfo:userOnDB, cryptos:cryptos})}
+            , 300);
+    })}, 300);
+    });
+    }
+    );
 
 
 
 // Post on Portfolio //
 
 app.post("/portfolio", function(req, res){
-    getCurrencyPrice(res, req.body.cryptoContract, "portfolio");
+    let newContract = req.body.cryptoContract;
+    let newPurchasePrice = Number(req.body.cryptoPurchase);
+    let newPurchaseAmount = Number(req.body.cryptoAmount);
+    var newInput = {
+        contract: newContract,
+        amount: newPurchaseAmount,
+        medium_price: newPurchasePrice
+    };
+    console.log(newInput)
+    add_contract(newInput, res.redirect("/portfolio") )
 });
 
 // Pancake Swap API //
-function getCurrencyPrice(res, contract, redirection){
-    var url = "https://api.pancakeswap.info/api/v2/tokens/" + contract;
-    https.get(url, function(response){
+function getCurrencyPrice(){
+    User.findOne({_id: 1}, function(err, userOnDB){
+        userOnDB.contracts.forEach(function(contrato){
+            var url = "https://api.pancakeswap.info/api/v2/tokens/" + contrato.contract;
 
-            response.on("data", function(data){
-                var crypto = JSON.parse(data);
-                var cryptoPrice = crypto.data.price;
-                var cryptoSymbol = crypto.data.symbol;
-                var price = Math.floor(Number(cryptoPrice)* 100)/100
-                console.log("Successfully run!")
-                cryptoNames.push(cryptoSymbol);
-                cryptoPrices.push(price);
-                res.redirect("/" + redirection)
+            https.get(url, function(response){
+
+                    response.on("data", function(data){
+                        var crypto = JSON.parse(data);
+                        var cryptoPrice = crypto.data.price;
+                        var cryptoSymbol = crypto.data.symbol;
+                        var price = Math.floor(Number(cryptoPrice)* 100)/100
+                        console.log(cryptoPrice)
+
+                        var input = {
+                            contract: contrato.contract,
+                            coinFigure: cryptoSymbol,
+                            coinPrice: cryptoPrice
+                        }
+                        Crypto.findOne({contract: input.contract}, function(err, resp){
+                            if(resp === null){
+                                    newContract(input);
+                            } else {
+                                    updatePrice(input.contract, input.coinPrice);
+                            }
+                        });
+                    }
+                )
+            });
         });
     });
-}
+};
 // DB //
 
 mongoose.connect("mongodb://localhost:27017/MyCryptoPortfolio")
-
+// User DB //
 const userSchema = new mongoose.Schema({
     _id: Number,
     name: String,
     user_name: String,
     password: Number,
-    contracts: [],
+    contracts: [
+        {contract: String,
+        amount: Number,
+        medium_price: Number }],
 });
 
 const User = mongoose.model("User", userSchema);
 
-const new_user = new User({
-    _id: 01,
-    name: "Vinnicius",
-    user_name: "housevinni",
-    password: "1234",
-    contracts: ["0x00e1656e45f18ec6747f5a8496fd39b50b38396d", "0x50332bdca94673f33401776365b66cc4e81ac81d"]
-});
+function add_contract(input, callback){
+    User.findOne({_id: 1}, function(err, userOnDB){
+        userOnDB.contracts.push(input);
+        userOnDB.save();
+        callback;
+    })
+};
 
 
+// Prices DB //
+const cryptoSchema = new mongoose.Schema({
+    contract: String,
+    coinFigure: String,
+    coinPrice: Number
+})
 
+const Crypto = mongoose.model("Crypto", cryptoSchema);
+
+function newContract(data){
+    newCrypto = new Crypto(data);
+    newCrypto.save();
+};
+
+function updatePrice(contract, price){
+    Crypto.findOne({contract: contract}, function(err, crypto){
+        crypto.coinPrice = price
+        crypto.save();
+        console.log(crypto.coinPrice)
+    })
+};
+
+function waitRes(contractArray){
+    contractArray.forEach(function(contrato){
+        Crypto.findOne({contract: contrato.contract}, function(err, crypto){
+            if(cryptos.includes(crypto)){
+                cryptos[crypto].coinPrice = crypto.coinPrice
+            } else {
+                cryptos.push(crypto);
+            }
+        })
+    });
+}
 // Start Server //
 
 app.listen(4002, function(){
