@@ -19,9 +19,16 @@
                     </thead>
                     <tbody>
                         <% for(i=0; i < userInfo.contracts.length; i++){ %>
+                            <% var cryptoOnDisplay = {} %>
+                            <%= cryptos.forEach(function(crypto) {
+                                if(crypto.contract == userInfo.contracts[i].contract){
+                                    cryptoOnDisplay = crypto;
+                                    return
+                                }
+                            }) %>
                             <tr>
-                             <td><%= cryptos[i].coinFigure %></td>
-                             <td><%= cryptos[i].coinPrice %></td>
+                             <td><%= cryptoOnDisplay.coinFigure %></td>
+                             <td><%= cryptoOnDisplay.coinPrice %></td>
                              <td><%= userInfo.contracts[i].medium_price %></td>
                              <td><%= userInfo.contracts[i].amount %></td>
                              <td><%= (1 * userInfo.contracts[i].amount) - (userInfo.contracts[i].medium_price * userInfo.contracts[i].amount) %></td>

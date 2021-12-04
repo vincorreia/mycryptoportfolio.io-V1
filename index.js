@@ -23,15 +23,10 @@ app.get("/portfolio", function(req, res){
         if(userOnDB.contracts.length > 0){
             getCurrencyPrice();
         }
-        setTimeout(function(){
-            Crypto.find({}, function(err, cryptos){
-        setTimeout(function(){
-            res.render("portfolio", {userInfo:userOnDB, cryptos:cryptos})}
-            , 300);
-    })}, 300);
+        Crypto.find({}, function(err, cryptos){
+            res.render("portfolio", {userInfo:userOnDB, cryptos:cryptos})});
     });
-    }
-    );
+    });
 
 
 
@@ -46,7 +41,6 @@ app.post("/portfolio", function(req, res){
         amount: newPurchaseAmount,
         medium_price: newPurchasePrice
     };
-    console.log(newInput)
     add_contract(newInput, res.redirect("/portfolio") )
 });
 
@@ -63,7 +57,6 @@ function getCurrencyPrice(){
                         var cryptoPrice = crypto.data.price;
                         var cryptoSymbol = crypto.data.symbol;
                         var price = Math.floor(Number(cryptoPrice)* 100)/100
-                        console.log(cryptoPrice)
 
                         var input = {
                             contract: contrato.contract,
@@ -103,8 +96,12 @@ const User = mongoose.model("User", userSchema);
 function add_contract(input, callback){
     User.findOne({_id: 1}, function(err, userOnDB){
         userOnDB.contracts.push(input);
-        userOnDB.save();
-        callback;
+        userOnDB.save(function(err){
+            if(!err){
+                callback;
+            }
+        });
+
     })
 };
 
@@ -120,14 +117,22 @@ const Crypto = mongoose.model("Crypto", cryptoSchema);
 
 function newContract(data){
     newCrypto = new Crypto(data);
-    newCrypto.save();
+    newCrypto.save(function(err){
+        if(!err){
+            console.log("Ok!")
+        }
+    });
 };
 
 function updatePrice(contract, price){
     Crypto.findOne({contract: contract}, function(err, crypto){
         crypto.coinPrice = price
-        crypto.save();
-        console.log(crypto.coinPrice)
+        crypto.save(function(err){
+            if(!err){
+                console.log("Ok")
+            }
+        });
+
     })
 };
 
