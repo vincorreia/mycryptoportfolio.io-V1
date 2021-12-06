@@ -4,7 +4,7 @@ A crypto currency portfolio website with fancy features
 
 ## Installation
 
-1. Download and install Node.js
+1. Download and install Node.js and mongoDB
 
 2. Open your command prompt and cd to the folder that you currently have the website in
 
