@@ -2,20 +2,22 @@
 <form action="/portfolio" method="post">
     <div class="container-fluid">
         <div class="row">
-            <div class="form-group regularDiv col-lg-5">
-                        <label for="contractInput" class="darkBlue bold ubuntu medium">New Purchase Details: </label><br>
+            <div class="form-group regularDiv col-lg-4">
+                        <h1 class="darkBlue bold ubuntu medium">New Purchase Details: </h1>
                         <input id="contractInput" type="text" name="cryptoContract" class="form-control-lg w-50" placeholder="Enter the crypto currency contract"><br><br>
-                        <input type="number" name="cryptoAmount" placeholder="Amount" class="form-control-lg w-25" step="0.0000000000001"><input type="number" name="cryptoPurchase" placeholder="Purchase Price" class="form-control-lg w-25" step="0.0000000000001"><br><br>
+                        <input type="number" name="cryptoAmount" placeholder="Amount" class="form-control-sm w-25" step="0.0000000000001"><input type="number" name="cryptoPurchase" placeholder="Purchase Price" class="form-control-sm w-25" step="0.0000000000001"><br><br>
                         <button type="submit" name="submit" class="btn btn-success btn-large">Submit</button>
             </div>
-            <div class="col-lg-3 regularPad">
-                <table class="table">
-                    <thead>
+            <div class="col-lg-5 regularPad">
+                <div class="card">
+                    <div class="card-body">
+                <table class="table table-light table-bordered table-hover w-auto">
+                    <thead class="thead-dark">
                         <th scope="col">Coin</th>
                         <th scope="col">Price</th>
-                        <th scope="col">Price Bought</th>
+                        <th scope="col-sm-2">Bought At</th>
                         <th scope="col">Amount</th>
-                        <th scope="col">Current Profit</th>
+                        <th scope="col-sm-2">Current Profit</th>
                     </thead>
                     <tbody>
                         <% for(i=0; i < userInfo.contracts.length; i++){ %>
@@ -31,11 +33,13 @@
                              <td><%= cryptoOnDisplay.coinPrice %></td>
                              <td><%= userInfo.contracts[i].medium_price %></td>
                              <td><%= userInfo.contracts[i].amount %></td>
-                             <td><%= (1 * userInfo.contracts[i].amount) - (userInfo.contracts[i].medium_price * userInfo.contracts[i].amount) %></td>
+                             <td><%= Math.floor(((cryptoOnDisplay.coinPrice * userInfo.contracts[i].amount) - (userInfo.contracts[i].medium_price * userInfo.contracts[i].amount)) * 100) / 100 %></td>
                             </tr>
                         <%}%>
                     </tbody>
                 </table>
+            </div>
+        </div>
             </div>
         </div>
     </div>
