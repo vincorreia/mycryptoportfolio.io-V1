@@ -24,11 +24,11 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// DB //
+/////////////////////////////////////// DB /////////////////////////////////////
 
 mongoose.connect("mongodb://localhost:27017/MyCryptoPortfolio", {useNewUrlParser: true});
 
-// User DB //
+///////////////////////////////// User DB //////////////////////////////////////
 const userSchema = new mongoose.Schema({
     name: String,
     user_name: String,
@@ -38,6 +38,16 @@ const userSchema = new mongoose.Schema({
         {contract: String,
         amount: Number,
         medium_price: Number }],
+    games: [
+        {
+            contract: String,
+            initialValue: Number,
+            coinPerDay: [{
+                type:Number
+            }],
+            initialInvestiment: Number
+        }
+    ]
 });
 
 userSchema.plugin(passportLocalMongoose);
@@ -120,8 +130,28 @@ function add_contract(userId, input, callback){
     })
 };
 
+function updateExistingContract(userId, input, callback){
+    User.findOne({_id: userId}, function(err, userOnDB){
+        let contract = input.contract;
+        let newPrice = input.medium_price;
+        let newAmount = input.amount;
 
-// Prices DB //
+        userOnDB.contracts.forEach(function(crypto){
+            if(crypto.contract == contract){
+                crypto.medium_price = (crypto.medium_price + newPrice) / 2;
+                crypto.amount = crypto.amount + newAmount;
+                userOnDB.save(function(err){
+                    if(err){
+                        console.log(err);
+                    } else{
+                        callback;
+                    }
+                });
+            }
+        })
+    })
+}
+/////////////////////////////// Prices DB //////////////////////////////////////
 const cryptoSchema = new mongoose.Schema({
     contract: String,
     coinFigure: String,
@@ -155,28 +185,17 @@ function updatePrice(contract, price){
     })
 };
 
-function waitRes(contractArray){
-    contractArray.forEach(function(contrato){
-        Crypto.findOne({contract: contrato.contract}, function(err, crypto){
-            if(cryptos.includes(crypto)){
-                cryptos[crypto].coinPrice = crypto.coinPrice
-            } else {
-                cryptos.push(crypto);
-            }
-        })
-    });
-}
-
-// Home Page //
+/////////////////////////// Home Page //////////////////////////////////////////
 
 app.get("/", function(req, res){
     res.render("index", {isAuthenticated: req.isAuthenticated()});
 });
 
-// Portfolio //
+///////////////////////// Portfolio ////////////////////////////////////////////
 
 app.get("/portfolio", function(req, res){
     if(req.isAuthenticated()){
+
         User.findOne({_id: req.user.id}, function(err, userOnDB){
             if(userOnDB.contracts.length > 0){
                 getCurrencyPrice(req.user.id);
@@ -191,23 +210,37 @@ app.get("/portfolio", function(req, res){
 
 
 
-// Post on Portfolio //
+//////////////////////////// Post on Portfolio /////////////////////////////////
 
 app.post("/portfolio", function(req, res){
     if(req.isAuthenticated()){
         let newContract = req.body.cryptoContract;
         let newPurchasePrice = Number(req.body.cryptoPurchase);
         let newPurchaseAmount = Number(req.body.cryptoAmount);
+        let yesOrNo = 0;
         var newInput = {
             contract: newContract,
             amount: newPurchaseAmount,
             medium_price: newPurchasePrice
         };
-        add_contract(req.user.id, newInput, res.redirect("/portfolio") )
+
+        User.findOne({_id:req.user.id}, function(err, result){
+            result.contracts.forEach(function(crypto){
+                if(crypto.contract == newInput.contract){
+                    console.log("contract found!")
+                    yesOrNo = 1;
+                }
+            });
+            if(yesOrNo == 1){
+                updateExistingContract(req.user.id, newInput, res.redirect("/portfolio"));
+            } else{
+                add_contract(req.user.id, newInput, res.redirect("/portfolio") );
+            }
+        })
     }
 });
 
-// Pancake Swap API //
+//////////////////////////////// Pancake Swap API //////////////////////////////
 function getCurrencyPrice(userId){
     User.findOne({_id: userId}, function(err, userOnDB){
         userOnDB.contracts.forEach(function(contrato){
