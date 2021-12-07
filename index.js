@@ -29,6 +29,7 @@ app.use(passport.session());
 mongoose.connect("mongodb://localhost:27017/MyCryptoPortfolio", {useNewUrlParser: true});
 
 ///////////////////////////////// User DB //////////////////////////////////////
+
 const userSchema = new mongoose.Schema({
     name: String,
     user_name: String,
@@ -166,7 +167,7 @@ function newContract(data){
         if(err){
             console.log(err);
         } else{
-            console.log(null);
+            console.log(data.price);
         }
     });
 };
@@ -178,7 +179,7 @@ function updatePrice(contract, price){
             if(err){
                 console.log(err);
             } else{
-                console.log(null);
+                console.log(crypto.coinPrice);
             }
         });
 
@@ -207,8 +208,6 @@ app.get("/portfolio", function(req, res){
         res.redirect("/login");
     }
 });
-
-
 
 //////////////////////////// Post on Portfolio /////////////////////////////////
 
@@ -273,7 +272,7 @@ function getCurrencyPrice(userId){
     });
 };
 
-// Start Server //
+/////////////////////////////// Start Server ///////////////////////////////////
 
 app.listen(4002, function(){
     console.log("Listening on 4002")

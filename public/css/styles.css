@@ -86,6 +86,10 @@ p{
 .width50{
     width: 40%
 }
+.profile-photo{
+    width:25%;
+    height:50%;
+}
 /* icons */
 
 @font-face {
