@@ -21,6 +21,13 @@ p{
 }
 
 /* Positioning Selectors */
+.flex-row{
+    display: flex;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
 .navPad{
     padding-left: 15%;
     padding-top: 1%;
@@ -53,6 +60,10 @@ p{
     color: #DCD6F7;
 }
 
+
+.disabled-link{
+    color:grey !important;
+}
 
 .navbar-brand:hover{
     color: #A6B1E1;

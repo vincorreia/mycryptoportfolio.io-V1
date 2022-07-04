@@ -1,4 +1,5 @@
 require('dotenv').config();
+const axios = require('axios');
 const express = require('express');
 const https = require('https');
 const bp = require('body-parser');
@@ -101,7 +102,7 @@ app.route("/login")
             if(err){
                 console.log(err);
             } else {
-                passport.authenticate("local")(req, res, function(){
+                passport.authenticate("local", {failureRedirect: '/login'})(req, res, function(){
                     res.redirect("/portfolio");
                 })
             }
@@ -192,6 +193,14 @@ app.get("/", function(req, res){
     res.render("index", {isAuthenticated: req.isAuthenticated()});
 });
 
+
+///////////////////////// P2E (Under construction) /////////////////////////////
+
+app.get("/p2e", (req, res) => {
+    res.render("p2e", {isAuthenticated: req.isAuthenticated()});
+})
+
+
 ///////////////////////// Portfolio ////////////////////////////////////////////
 
 app.get("/portfolio", function(req, res){
@@ -245,12 +254,10 @@ function getCurrencyPrice(userId){
         userOnDB.contracts.forEach(function(contrato){
             var url = "https://api.pancakeswap.info/api/v2/tokens/" + contrato.contract;
 
-            https.get(url, function(response){
-
-                    response.on("data", function(data){
-                        var crypto = JSON.parse(data);
-                        var cryptoPrice = crypto.data.price;
-                        var cryptoSymbol = crypto.data.symbol;
+            axios.get(url).then(response => {
+                    const crypto = response.data.data
+                        const cryptoPrice = crypto.price;
+                        var cryptoSymbol = crypto.symbol;
                         var price = Math.floor(Number(cryptoPrice)* 100)/100
 
                         var input = {
@@ -269,8 +276,7 @@ function getCurrencyPrice(userId){
                 )
             });
         });
-    });
-};
+    };
 
 /////////////////////////////// Start Server ///////////////////////////////////
 

@@ -9,6 +9,7 @@
   "author": "Vinnicius Correia",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.27.2",
     "body-parser": "^1.19.0",
     "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
