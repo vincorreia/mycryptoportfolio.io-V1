@@ -11,6 +11,10 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require('mongoose-findorcreate');
 const app = express();
 
+
+const port = process.env.PORT || 4002
+const db = process.env.MONGODB_URI || 'mongodb://localhost:27017/MyCryptoPortfolio'
+
 app.set('view engine', 'ejs');
 app.use(bp.urlencoded({extended: true}));
 app.use(express.static("public"));
@@ -27,7 +31,7 @@ app.use(passport.session());
 
 /////////////////////////////////////// DB /////////////////////////////////////
 
-mongoose.connect("mongodb://localhost:27017/MyCryptoPortfolio", {useNewUrlParser: true});
+mongoose.connect(db, {useNewUrlParser: true});
 
 ///////////////////////////////// User DB //////////////////////////////////////
 
@@ -280,6 +284,6 @@ function getCurrencyPrice(userId){
 
 /////////////////////////////// Start Server ///////////////////////////////////
 
-app.listen(4002, function(){
-    console.log("Listening on 4002")
+app.listen(port, function(){
+    console.log("Listening on " + port)
 });
